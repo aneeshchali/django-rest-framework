@@ -1,22 +1,28 @@
 from django.shortcuts import render
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse
+from django.forms.models import model_to_dict
+
 # Create your views here.
+from products.models import Product
 
 def api_home(request):
 
-    body = request.body #Byte string for json data
-    print(request.GET)
-    print(request.POST)
-    data ={}
-    try:
-        data = json.loads(body) #-->converts json to python dict
-    except:
-        pass
+    model_data = Product.objects.all().order_by('?').first() # random query set from ?
+    data = {}
 
-    print(json.dumps(dict(request.headers)))
-    # data['header'] = request.headers #  this was not JSON serializable because JsonResponse couldn't convert it  to json again
-    data['header'] = json.dumps(dict(request.headers)) # This is the solution for the above.
-    data['content_type']= request.content_type
-    print(data)
-    return  JsonResponse(data)
+    if model_data:
+        # data['id'] = model_data.id
+        # data['title'] = model_data.title
+        # data['content'] = model_data.content
+        # data['price'] = model_data.price
+
+        #model instance (model_data)
+        #turn into a py dict
+        #return json
+#----------------------------------------------------
+        #below works same as above in this scenerio.
+        data = model_to_dict(model_data,fields=['id','title','price','content'])
+        json_data = json.dumps(data)
+            #default content_type of httpResponse is text/str
+    return  HttpResponse(data,headers={'content-type':'application/json'})
