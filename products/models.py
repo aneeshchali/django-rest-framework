@@ -11,8 +11,8 @@ class Product(models.Model):
     def sale_price(self):
         return "%.2f" %(float(self.price) * 0.8)
 
-    def GetDiscount(self):
-        return '122'
+    def get_discount(self):
+        return "122"
 
     def __str__(self):
         return f'{self.title}'

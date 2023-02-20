@@ -24,7 +24,6 @@ def api_home(request):
     if instance:
         # data = model_to_dict(model_data,fields=['id','title','price','content'])
         data =  ProductSerializer(instance).data
-        print(data)
         return  Response(data)
             #default content_type of httpResponse is text/str
     # return  HttpResponse(data,headers={'content-type':'application/json'})
