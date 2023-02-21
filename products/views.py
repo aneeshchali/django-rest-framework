@@ -1,7 +1,8 @@
-from rest_framework import generics, mixins, viewsets, views
+from rest_framework import generics, mixins, viewsets, views,permissions,authentication
 from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
+from .permissions import IsStaffPermission
 
 
 class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -9,6 +10,8 @@ class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsAdminUser,IsStaffPermission]
 
     def get(self,request,*args,**kwargs):
 
