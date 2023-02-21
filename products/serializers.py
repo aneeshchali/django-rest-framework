@@ -6,9 +6,16 @@ from .models import Product
 
 class ProductSerializer(serializers.ModelSerializer):
     my_discount = serializers.SerializerMethodField(read_only=True)
+
+    #url in the serializer view:
+    url = serializers.HyperlinkedIdentityField(
+        view_name='product-detail',
+        lookup_field='pk',
+    )
     class Meta:
         model = Product
         fields = [
+            'url',
             'id',
             'title',
             'content',

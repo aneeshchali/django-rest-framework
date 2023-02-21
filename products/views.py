@@ -11,7 +11,6 @@ class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication]
     permission_classes = [permissions.IsAdminUser,IsStaffPermission]
 
     def get(self,request,*args,**kwargs):
