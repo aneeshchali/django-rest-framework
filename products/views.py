@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Product
 from .serializers import ProductSerializer
 from .permissions import IsStaffPermission
+from api.authentication import TokenAuthentication
 
 
 class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin,
@@ -10,7 +11,7 @@ class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    authentication_classes = [authentication.SessionAuthentication]
+    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication]
     permission_classes = [permissions.IsAdminUser,IsStaffPermission]
 
     def get(self,request,*args,**kwargs):
