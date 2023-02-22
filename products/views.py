@@ -11,6 +11,7 @@ class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
+    #This permission classes can be added in tbesettings of the django main app
     permission_classes = [permissions.IsAdminUser,IsStaffPermission]
 
     def get(self,request,*args,**kwargs):
@@ -24,11 +25,20 @@ class ProductManageAllView(mixins.ListModelMixin, mixins.CreateModelMixin, mixin
     def post(self,request,*args,**kwargs):
         return self.create(request,*args,**kwargs)
 
+    def get_queryset(self,*args,**kwargs):
+        qs = super().get_queryset()
+        request = self.request
+        user = request.user
+        if not user.is_authenticated:
+            return Product.objects.none()
+        return  qs.filter(user=request.user)
+
     def perform_create(self, serializer):
         print(serializer.validated_data)
         title = serializer.validated_data.get('title')
         content = serializer.validated_data.get('content')
         None
+        #better way is done in the serializer class just using the source.
         if content is None:
             content = title
         serializer.save(content=content,title=title.capitalize())
